@@ -7,6 +7,7 @@ public class Main {
 
     public static boolean debug = true;
     public static String folder = "data";
+    public static String file;
     public static String format = "csv";
 
     public static void main(String[] args) {
@@ -14,6 +15,9 @@ public class Main {
 
         for (int i = 0; i < args.length; i++) {
             switch (args[i]) {
+                case "-file":
+                    file = args[++i];
+                    break;
                 case "-folder":
                     folder = args[++i];
                     break;
@@ -32,7 +36,7 @@ public class Main {
         try {
             if (folder != null) {
                 Converter converter = new Converter(folder);
-                converter.convert();
+                converter.convert(file);
             } else {
                 System.out.println("WARNING: nothing to do for this combination of arguments.");
             }
