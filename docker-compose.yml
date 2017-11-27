@@ -1,0 +1,7 @@
+version: '2'
+services:
+  timescale:
+    image: 'timescale/timescaledb-postgis:latest-pg10'
+    container_name: timescale
+    ports:
+      - '5432:5432'

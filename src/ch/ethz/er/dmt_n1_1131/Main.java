@@ -1,12 +1,15 @@
 package ch.ethz.er.dmt_n1_1131;
 
+import ch.ethz.er.dmt_n1_1131.data.Dataset;
+import ch.ethz.er.dmt_n1_1131.exporter.CsvExporter;
+import ch.ethz.er.dmt_n1_1131.exporter.TimescaleExporter;
+
 import java.time.Duration;
 import java.time.Instant;
 
 public class Main {
 
-    public static boolean debug = true;
-    public static String folder = "data";
+    public static String folder;
     public static String file;
     public static String format = "csv";
 
@@ -21,9 +24,6 @@ public class Main {
                 case "-folder":
                     folder = args[++i];
                     break;
-                case "-silent":
-                    debug = false;
-                    break;
                 case "-format":
                     format = args[++i];
                     break;
@@ -34,11 +34,24 @@ public class Main {
         }
 
         try {
-            if (folder != null) {
-                Converter converter = new Converter(folder);
-                converter.convert(file);
-            } else {
-                System.out.println("WARNING: nothing to do for this combination of arguments.");
+            Converter converter = new Converter(folder);
+            Dataset dataset = converter.convert(file);
+            switch (format) {
+                case "csv": {
+                    if (folder != null) {
+                        CsvExporter exporter = new CsvExporter(folder);
+                        exporter.export(dataset, file);
+                    } else {
+                        System.out.println("WARNING: specify output folder");
+                    }
+                    break;
+                }
+                case "timescale": {
+                    TimescaleExporter timescaleExporter = new TimescaleExporter();
+                    timescaleExporter.init();
+                    timescaleExporter.export(dataset);
+                    break;
+                }
             }
         } catch (Exception e) {
             System.out.println("ERROR: " + e.getMessage());
