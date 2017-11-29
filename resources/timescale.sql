@@ -45,4 +45,4 @@ CREATE TABLE IF NOT EXISTS records (
   wf1                  REAL[8192]        NOT NULL
 );
 
-SELECT create_hypertable('records', 'time', if_not_exists => TRUE);
+SELECT create_hypertable('records', 'time', if_not_exists => TRUE, chunk_time_interval => interval '1 month');

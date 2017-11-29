@@ -8,10 +8,7 @@ import ch.ethz.er.dmt_n1_1131.data.Dataset;
 
 public class Converter {
 
-    private String dataFolder;
-
-    public Converter(String folder) {
-        this.dataFolder = folder;
+    public Converter() {
     }
 
     public Dataset convert(String dataFilePath) throws Exception {
