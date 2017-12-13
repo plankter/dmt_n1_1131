@@ -36,7 +36,7 @@ public class TimescaleExporter {
 
     public void init() throws SQLException, IOException {
         try (Connection connection = DriverManager.getConnection(this.url, TimescaleExporter.user, TimescaleExporter.password);
-             FileReader fileReader = new FileReader("./resources/timescale.sql")
+             FileReader fileReader = new FileReader("./timescale.sql")
         ) {
             ScriptRunner scriptRunner = new ScriptRunner(connection);
             scriptRunner.runScript(fileReader);
