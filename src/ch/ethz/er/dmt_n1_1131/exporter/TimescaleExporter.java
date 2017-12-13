@@ -5,8 +5,9 @@ import ch.ethz.er.dmt_n1_1131.data.Dataset;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.ibatis.jdbc.ScriptRunner;
 
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.sql.*;
 
 public class TimescaleExporter {
@@ -36,7 +37,8 @@ public class TimescaleExporter {
 
     public void init() throws SQLException, IOException {
         try (Connection connection = DriverManager.getConnection(this.url, TimescaleExporter.user, TimescaleExporter.password);
-             FileReader fileReader = new FileReader("./timescale.sql")
+             InputStream schemaFile = getClass().getResourceAsStream("/timescale.sql");
+             InputStreamReader fileReader = new InputStreamReader(schemaFile)
         ) {
             ScriptRunner scriptRunner = new ScriptRunner(connection);
             scriptRunner.runScript(fileReader);

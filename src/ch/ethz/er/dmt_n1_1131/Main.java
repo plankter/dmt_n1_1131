@@ -8,6 +8,7 @@ import org.apache.commons.io.FilenameUtils;
 import java.io.File;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Arrays;
 
 public class Main {
 
@@ -92,6 +93,7 @@ public class Main {
             } else {
                 File inputFolder = new File(folder);
                 File[] listOfFiles = inputFolder.listFiles();
+                Arrays.sort(listOfFiles);
                 switch (format) {
                     case "csv": {
                         final CsvExporter exporter = new CsvExporter(output);
@@ -108,10 +110,12 @@ public class Main {
                     case "timescale": {
                         final TimescaleExporter timescaleExporter = new TimescaleExporter(host, db, user, password);
                         timescaleExporter.init();
+                        int index = 0;
                         for (File item : listOfFiles) {
+                            index++;
                             if (item.isFile() && FilenameUtils.isExtension(item.getName(), "dat")) {
                                 file = item.getPath();
-                                System.out.println("Data File: " + file);
+                                System.out.println("Data File [" + index + "/" + listOfFiles.length + "]: " + file);
                                 final Dataset dataset = converter.convert(file);
                                 timescaleExporter.export(dataset);
                             }
