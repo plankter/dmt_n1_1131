@@ -15,6 +15,10 @@ public class Main {
     private static String output;
     private static String file;
     private static String format = "csv";
+    private static String host = "localhost";
+    private static String db = "dmt_n1_1131";
+    private static String user = "timescale";
+    private static String password = "FCsGT9QCS8wXJtPeDwyw";
 
     private static boolean processArgs(String[] args) {
         for (int i = 0; i < args.length; i++) {
@@ -30,6 +34,18 @@ public class Main {
                     break;
                 case "-format":
                     format = args[++i];
+                    break;
+                case "-host":
+                    host = args[++i];
+                    break;
+                case "-db":
+                    db = args[++i];
+                    break;
+                case "-user":
+                    user = args[++i];
+                    break;
+                case "-password":
+                    password = args[++i];
                     break;
                 default:
                     System.out.println("WARNING: unknown argument " + args[i] + ".");
@@ -67,7 +83,7 @@ public class Main {
                         break;
                     }
                     case "timescale": {
-                        final TimescaleExporter timescaleExporter = new TimescaleExporter();
+                        final TimescaleExporter timescaleExporter = new TimescaleExporter(host, db, user, password);
                         timescaleExporter.init();
                         timescaleExporter.export(dataset);
                         break;
@@ -90,7 +106,7 @@ public class Main {
                         break;
                     }
                     case "timescale": {
-                        final TimescaleExporter timescaleExporter = new TimescaleExporter();
+                        final TimescaleExporter timescaleExporter = new TimescaleExporter(host, db, user, password);
                         timescaleExporter.init();
                         for (File item : listOfFiles) {
                             if (item.isFile() && FilenameUtils.isExtension(item.getName(), "dat")) {

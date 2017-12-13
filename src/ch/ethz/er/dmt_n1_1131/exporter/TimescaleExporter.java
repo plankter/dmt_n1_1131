@@ -11,17 +11,21 @@ import java.sql.*;
 
 public class TimescaleExporter {
 
-    private static final String HOST = "localhost";
-    private static final String DB_NAME = "dmt_n1_1131";
-    private static final String USER = "postgres";
-    private static final String PASSWORD = "";
+    private static String db;
+    private static String host;
+    private static String user;
+    private static String password;
 
     private String url;
 
 
-    public TimescaleExporter() {
+    public TimescaleExporter(String host, String db, String user, String password) {
+        TimescaleExporter.host = host;
+        TimescaleExporter.db = db;
+        TimescaleExporter.user = user;
+        TimescaleExporter.password = password;
         try {
-            this.url = "jdbc:postgresql://" + HOST + "/" + DB_NAME + "?rewriteBatchedStatements=true";
+            this.url = "jdbc:postgresql://" + TimescaleExporter.host + "/" + TimescaleExporter.db + "?rewriteBatchedStatements=true";
             Class.forName("org.postgresql.Driver");
         } catch (Exception e) {
             System.out.println("ERROR: " + e.getMessage());
@@ -31,7 +35,7 @@ public class TimescaleExporter {
 
 
     public void init() throws SQLException, IOException {
-        try (Connection connection = DriverManager.getConnection(this.url, USER, PASSWORD);
+        try (Connection connection = DriverManager.getConnection(this.url, TimescaleExporter.user, TimescaleExporter.password);
              FileReader fileReader = new FileReader("./resources/timescale.sql")
         ) {
             ScriptRunner scriptRunner = new ScriptRunner(connection);
@@ -47,7 +51,7 @@ public class TimescaleExporter {
                 "data_type, hk, coord_syst, data_unit, freq, ns, t_dur, nam1c, wf1)" +
                 " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-        try (Connection connection = DriverManager.getConnection(this.url, USER, PASSWORD)) {
+        try (Connection connection = DriverManager.getConnection(this.url, TimescaleExporter.user, TimescaleExporter.password)) {
             connection.setAutoCommit(false);
             try (PreparedStatement preparedStatement = connection.prepareStatement(sqlInsertRecord, Statement.SUCCESS_NO_INFO)) {
                 for (DataRecord record: dataset.getRecords()) {
